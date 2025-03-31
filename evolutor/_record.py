@@ -64,11 +64,11 @@ class Records:
         ibs_rates: IBSAmplitudeGrowthRates,
         circumference: float,
         harmonic_number: int,
-        energy_total: float,
+        total_energy: float,
         slip_factor: float,
         beta_rel: float,
-        RF_voltage: float,
-        Z: float,
+        rf_voltage: float,
+        reference_charge: float,
     ) -> None:
         """
         Update the records for the next step, provided with the
@@ -88,11 +88,11 @@ class Records:
             Tz=ibs_rates.Tz,
             circumference=circumference,
             harmonic_number=harmonic_number,
-            energy_total=energy_total,
+            total_energy=total_energy,
             slip_factor=slip_factor,
             beta_rel=beta_rel,
-            RF_voltage=RF_voltage,
-            Z=Z,
+            rf_voltage=rf_voltage,
+            reference_charge=reference_charge,
         )
         # Update the records - we took values at current step
         # to determine the values at current step + 1

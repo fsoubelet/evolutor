@@ -28,11 +28,11 @@ def ibs_evolution(
     # Parameters needed for sigma_delta -> bunch_length conversion
     circumference: float,
     harmonic_number: int,
-    energy_total: float,
+    total_energy: float,
     slip_factor: float,
     beta_rel: float,
-    RF_voltage: float,
-    Z: float,
+    rf_voltage: float,
+    reference_charge: float,
 ) -> tuple[float, float, float, float]:
     """
     Return new emittances from IBS growth/decay over the interval dt.
@@ -72,16 +72,17 @@ def ibs_evolution(
         The ring circumference in [m].
     harmonic_number : int
         The harmonic number.
-    energy_total : float
-        The total energy of the particles in [eV] (np.sqrt(particles.p0c[0]**2 + particles.mass0**2)).
+    total_energy : float
+        The total energy of the particles in [eV].
+        (np.sqrt(particles.p0c[0]**2 + particles.mass0**2)).
     slip_factor : float
         The slip factor (as gotten from xsuite Twiss).
     beta_rel : float
         The relativistic beta.
-    RF_voltage : float
-        The RF voltage in [V]. (config['V0max'] * 1e6))
-    Z : float
-        The total charge (this is the xp.Particles.q0)
+    rf_voltage : float
+        The RF voltage in [V] (config['V0max'] * 1e6).
+    reference_charge : float
+        The reference charge (this is xt.Particles.q0)
 
     Returns
     -------
@@ -97,11 +98,11 @@ def ibs_evolution(
     new_bunch_length: float = bunch_length(
         circumference,
         harmonic_number,
-        energy_total,
+        total_energy,
         slip_factor,
         sigma_E,
         beta_rel,
-        RF_voltage,
-        Z,
+        rf_voltage,
+        reference_charge,
     )
     return new_epsx, new_epsy, new_sigma_delta, new_bunch_length
