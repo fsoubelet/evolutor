@@ -16,7 +16,11 @@ dynamic = ["version"]
 requires-python = ">=3.10"
 
 dependencies = [
-    "xsuite >= 0.27.0 , <1.0",
+    # These bring the IBS convention change
+    # Pinned to make sure evolution formula
+    # is correct (it is for amplitude rates)
+    "xtrack >= 0.80.0 , <1.0",
+    "xfields >= 0.23.0 , <1.0",
 ]
 
 [project.optional-dependencies]
