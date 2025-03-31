@@ -3,11 +3,17 @@
 # dependencies = [
 #   "matplotlib",
 #   "numpy",
-#   "scipy",
+#   "setuptools",
 #   "xtrack>=0.80.0",
 #   "xfields>=0.23.0",
 #   "xpart>=0.22.0",
+#   "evolutor",
 # ]
+# [tool.uv.sources]
+# evolutor = { index = "testpypi" }
+# [[tool.uv.index]]
+# name = "testpypi"
+# url = "https://test.pypi.org/simple/"
 # ///
 
 """
