@@ -19,42 +19,51 @@ from evolutor._jit import maybe_jit
 
 @maybe_jit
 def bunch_length(
-    Circumference: float,
-    Harmonic_Num: int,
-    Energy_total: float,
-    SlipF: float,
-    Sigma_E: float,
+    circumference: float,
+    harmonic_number: int,
+    total_energy: float,
+    slip_factor: float,
+    sigma_e: float,
     beta_rel: float,
-    RF_Voltage: float,
-    Z: float,
+    rf_voltage: float,
+    reference_charge: float,
 ) -> float:
-    """Get bunch length from the energy spread. I removed Energy_loss from the function
-    of Michalis as it was not used (and Sofia was passing 0.0).
+    """
+    Get the bunch length from the energy spread. I have removed
+    Energy_loss from the function of Michalis as it was not used
+    (and Sofia was passing 0.0).
 
-    Circumference : float
+    Parameters
+    ----------
+    circumference : float
         The ring circumference in [m].
-    Harmonic_Num : int
+    harmonic_number : int
         The harmonic number.
-    Energy_total : float
-        The total energy of the particles in [eV] (np.sqrt(particles.p0c[0]**2 + particles.mass0**2)).
-    SlipF : float
-        The slip factor (as gotten from xsuite Twiss).
-    Sigma_E : float
-        The energy spread. (it is sigma_delta * beta_rel^2)
+    total_energy : float
+        The total energy of the particles in [eV].
+    slip_factor : float
+        The slip factor (as from xsuite Twiss).
+    sigma_e : float
+        The energy spread (sigma_delta * beta_rel^2).
     beta_rel : float
         The relativistic beta.
-    RF_Voltage : float
-        The RF voltage in [V]. (config['V0max'] * 1e6))
-    Z : float
-        The total charge (this is the xp.Particles.q0)
+    rf_voltage : float
+        The RF voltage in [V] (config['V0max'] * 1e6).
+    reference_charge : float
+        The reference charge (this is xt.Particles.q0)
+
+    Returns
+    -------
+    float
+        The bunch length in [m].
     """
     return (
-        Circumference
-        / (2.0 * np.pi * Harmonic_Num)
+        circumference
+        / (2.0 * np.pi * harmonic_number)
         * np.arccos(
             1
-            - (Sigma_E**2 * Energy_total * abs(SlipF) * Harmonic_Num * np.pi)
-            / (beta_rel**2 * Z * RF_Voltage)
+            - (sigma_e**2 * total_energy * abs(slip_factor) * harmonic_number * np.pi)
+            / (beta_rel**2 * reference_charge * rf_voltage)
         )
     )
 
@@ -90,9 +99,14 @@ def energy_spread(
     beta_rel : float
         The relativistic beta.
     rf_voltage : float
-        The RF voltage in [V]. (config['V0max'] * 1e6))
+        The RF voltage in [V] (config['V0max'] * 1e6).
     reference_charge : float
         The reference charge (this is xt.Particles.q0)
+
+    Returns
+    -------
+    float
+        The energy spread in [-].
     """
     tau_phi = 2 * np.pi * harmonic_number * bunch_length / circumference
     return np.sqrt(
