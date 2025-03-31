@@ -61,40 +61,44 @@ def bunch_length(
 
 @maybe_jit
 def energy_spread(
-    Circumference: float,
-    Harmonic_Num: int,
-    Energy_total: float,
-    SlipF: float,
-    BL: float,
+    circumference: float,
+    harmonic_number: int,
+    total_energy: float,
+    slip_factor: float,
+    bunch_length: float,
     beta_rel: float,
-    RF_Voltage: float,
-    Z: float,
+    rf_voltage: float,
+    reference_charge: float,
 ) -> float:
-    """Get the energy spread from bunch length. I removed Energy_loss from the function
-    of Michalis as it was not used (and Sofia was passing 0.0).
+    """
+    Get the energy spread from bunch length. I have removed
+    Energy_loss from the function of Michalis as it was not
+    used (and Sofia was passing 0.0).
 
-    Circumference : float
+    Parameters
+    ----------
+    circumference : float
         The ring circumference in [m].
-    Harmonic_Num : int
+    harmonic_number : int
         The harmonic number.
-    Energy_total : float
+    total_energy : float
         The total energy of the particles in [eV].
-    SlipF : float
-        The slip factor (as gotten from xsuite Twiss).
-    BL : float
+    slip_factor : float
+        The slip factor (as from xsuite Twiss).
+    bunch_length : float
         The bunch length in [m].
     beta_rel : float
         The relativistic beta.
-    RF_Voltage : float
+    rf_voltage : float
         The RF voltage in [V]. (config['V0max'] * 1e6))
-    Z : float
-        The total charge (this is the xp.Particles.q0)
+    reference_charge : float
+        The reference charge (this is xt.Particles.q0)
     """
-    tau_phi = 2 * np.pi * Harmonic_Num * BL / Circumference  # bunch length in rad
+    tau_phi = 2 * np.pi * harmonic_number * bunch_length / circumference
     return np.sqrt(
         beta_rel**2
-        * Z
-        * RF_Voltage
+        * reference_charge
+        * rf_voltage
         * (-(np.cos(tau_phi) - 1))
-        / (Energy_total * abs(SlipF) * Harmonic_Num * np.pi)
+        / (total_energy * abs(slip_factor) * harmonic_number * np.pi)
     )
