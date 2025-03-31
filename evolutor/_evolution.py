@@ -15,16 +15,15 @@ from evolutor._converters import bunch_length
 from evolutor._jit import maybe_jit
 
 
-# TODO: adapt to new convention
 @maybe_jit
 def ibs_evolution(
     epsx: float,
     epsy: float,
     sigma_delta: float,
     dt: float,
-    Tx: float,
-    Ty: float,
-    Tz: float,
+    Kx: float,
+    Ky: float,
+    Kz: float,
     # -----------------------------
     # Parameters needed for sigma_delta -> bunch_length conversion
     circumference: float,
@@ -59,12 +58,15 @@ def ibs_evolution(
     dt : float
         The time interval over which to compute
         the emittances' evolution in [s].
-    Tx : float
-        The horizontal emittance growth rate in [1/s].
-    Ty : float
-        The vertical emittance growth rate in [1/s].
-    Tz : float
-        The longitudinal emittance growth rate in [1/s].
+    Kx : float
+        The horizontal emittance growth rate in
+        amplitude convention, in [1/s].
+    Ky : float
+        The vertical emittance growth rate in
+        amplitude convention, in [1/s].
+    Kz : float
+        The longitudinal emittance growth rate in
+        amplitude convention, in [1/s].
     ----- Bunch length from sigma delta parameters -----
     circumference : float
         The ring circumference in [m].
@@ -87,9 +89,9 @@ def ibs_evolution(
         The new transverse emittances, sigma delta
         and bunch length after the time interval dt.
     """
-    new_epsx: float = epsx * np.exp(dt * Tx)
-    new_epsy: float = epsy * np.exp(dt * Ty)
-    new_sigma_delta: float = sigma_delta * np.exp(dt * 0.5 * Tz)
+    new_epsx: float = epsx * np.exp(dt * 2 * Kx)
+    new_epsy: float = epsy * np.exp(dt * 2 * Ky)
+    new_sigma_delta: float = sigma_delta * np.exp(dt * Kz)
     # Get new bunch length value from sigma delta and not exponential growth
     sigma_E: float = new_sigma_delta * beta_rel**2  # get energy spread from sigma delta
     new_bunch_length: float = bunch_length(
