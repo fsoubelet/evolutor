@@ -5,6 +5,7 @@ JIT
 Provides a simple decorator to JIT-compile the function using
 numba if the library is installed, and do nothing otherwise.
 """
+
 from __future__ import annotations
 
 from typing import Callable
