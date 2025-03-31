@@ -15,6 +15,7 @@ from evolutor._converters import bunch_length
 from evolutor._jit import maybe_jit
 
 
+# TODO: adapt to new convention
 @maybe_jit
 def ibs_evolution(
     epsx: float,
