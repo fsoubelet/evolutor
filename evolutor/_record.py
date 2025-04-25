@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from evolutor._evolution import ibs_evolution
+from evolutor._evolution import ibs_and_sr_evolution, ibs_evolution
 
 if TYPE_CHECKING:
     from xfields.ibs import IBSAmplitudeGrowthRates
@@ -86,6 +86,63 @@ class Records:
             Kx=ibs_rates.Kx,
             Ky=ibs_rates.Ky,
             Kz=ibs_rates.Kz,
+            circumference=circumference,
+            harmonic_number=harmonic_number,
+            total_energy=total_energy,
+            slip_factor=slip_factor,
+            beta_rel=beta_rel,
+            rf_voltage=rf_voltage,
+            reference_charge=reference_charge,
+        )
+        # Update the records - we took values at current step
+        # to determine the values at current step + 1
+        self.update_at_step(
+            self.current_step + 1, new_epsx, new_epsy, new_sigma_delta, new_bunch_length
+        )
+        self.current_step += 1
+
+    def update_with_ibsand_sr_at_next_step(
+        self,
+        dt: float,
+        ibs_rates: IBSAmplitudeGrowthRates,
+        sr_eq_epsx: float,
+        sr_eq_epsy: float,
+        sr_eq_sigma_delta: float,
+        sr_taux: float,
+        sr_tauy: float,
+        sr_tauz: float,
+        circumference: float,
+        harmonic_number: int,
+        total_energy: float,
+        slip_factor: float,
+        beta_rel: float,
+        rf_voltage: float,
+        reference_charge: float,
+    ) -> None:
+        """
+        Update the records for the next step, provided with the
+        time delta between the steps, the IBS growth rates and
+        the synchrotron radiation equilibrium values as well as
+        damping times. Note that this assumes growth rates to be
+        in amplitude convention (since xfields 0.23.0 and xtrack
+        0.80.0).
+        """
+        epsx, epsy, sigma_delta, _ = self.values_at_current_step
+        # All is handled in this function right there
+        new_epsx, new_epsy, new_sigma_delta, new_bunch_length = ibs_and_sr_evolution(
+            epsx=epsx,
+            epsy=epsy,
+            sigma_delta=sigma_delta,
+            dt=dt,
+            Kx=ibs_rates.Kx,
+            Ky=ibs_rates.Ky,
+            Kz=ibs_rates.Kz,
+            sr_eq_epsx=sr_eq_epsx,
+            sr_eq_epsy=sr_eq_epsy,
+            sr_eq_sigma_delta=sr_eq_sigma_delta,
+            sr_taux=sr_taux,
+            sr_tauy=sr_tauy,
+            sr_tauz=sr_tauz,
             circumference=circumference,
             harmonic_number=harmonic_number,
             total_energy=total_energy,
