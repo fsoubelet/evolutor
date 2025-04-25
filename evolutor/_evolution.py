@@ -39,12 +39,6 @@ def ibs_evolution(
     The new bunch length is computed via the new sigma delta (via the
     corresponding energy spread).
 
-    Note
-    ----
-        This currently assumes the provided growth rates are given in
-        emittance convention (which is set to change in a future xsuite
-        version).
-
     Parameters
     ----------
     epsx : float
