@@ -16,6 +16,7 @@ dynamic = ["version"]
 requires-python = ">=3.10"
 
 dependencies = [
+    "numpy >= 2.0 , < 3.0",
     # These bring the IBS convention change
     # Pinned to make sure evolution formula
     # is correct (it is for amplitude rates)
@@ -26,6 +27,9 @@ dependencies = [
 [project.optional-dependencies]
 fast = [
     "numba >= 0.60.0",
+]
+examples = [
+    "matplotlib",
 ]
 
 # ----- Dev Tools Configuration ----- #
