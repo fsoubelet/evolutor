@@ -37,7 +37,7 @@ formalism = "bjorken-mtingwa"  # or "nagaitsev" (faster) if there is no Dy
 circumference = line.get_length()
 total_energy = np.sqrt(line.particle_ref.p0c[0] ** 2 + line.particle_ref.mass0**2)  # in [eV]
 slip_factor = twiss.slip_factor
-beta_rel = line.particle_ref.beta0[0]
+beta_rel = twiss.beta0
 reference_charge = line.particle_ref.q0
 
 harmonic_number = 34640  # provide your own
