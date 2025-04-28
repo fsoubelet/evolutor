@@ -12,8 +12,7 @@ import numpy as np
 
 from evolutor._jit import maybe_jit
 
-# These two functions below have been copied from Michalis
-# (they also work for protons). Originally copied from his Github
+# These two functions below have been originally copied from Michalis' Github
 # (MichZampetakis/IBS_for_Xsuite/blob/main/lib/general_functions.py)
 
 
