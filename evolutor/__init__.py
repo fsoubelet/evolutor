@@ -1,4 +1,4 @@
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 from ._evolution import ibs_and_sr_evolution, ibs_evolution
 from ._record import Records
