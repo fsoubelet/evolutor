@@ -62,6 +62,8 @@ class Records:
         self,
         dt: float,
         ibs_rates: IBSAmplitudeGrowthRates,
+        # -----------------------------
+        # Parameters needed for sigma_delta -> bunch_length conversion
         circumference: float,
         harmonic_number: int,
         total_energy: float,
@@ -75,6 +77,31 @@ class Records:
         time delta between the steps and the IBS growth rates.
         Note that this assumes growth rates to be in amplitude
         convention (since xfields 0.23.0 and xtrack 0.80.0).
+
+        Parameters
+        ----------
+        dt : float
+            The time interval over which to compute
+            the emittances' evolution in [s].
+        ibs_rates : IBSAmplitudeGrowthRates
+            The IBS growth rates in amplitude convention,
+            in [1/s].
+        ----- Bunch length from sigma delta parameters -----
+        circumference : float
+            The ring circumference in [m].
+        harmonic_number : int
+            The harmonic number.
+        total_energy : float
+            The total energy of the particles in [eV].
+            (np.sqrt(particles.p0c[0]**2 + particles.mass0**2)).
+        slip_factor : float
+            The slip factor (as gotten from xsuite Twiss).
+        beta_rel : float
+            The relativistic beta.
+        rf_voltage : float
+            The RF voltage in [V] (config['V0max'] * 1e6).
+        reference_charge : float
+            The reference charge (this is xt.Particles.q0)
         """
         epsx, epsy, sigma_delta, _ = self.values_at_current_step
         # All is handled in this function right there
@@ -97,20 +124,28 @@ class Records:
         # Update the records - we took values at current step
         # to determine the values at current step + 1
         self.update_at_step(
-            self.current_step + 1, new_epsx, new_epsy, new_sigma_delta, new_bunch_length
+            self.current_step + 1,
+            new_epsx,
+            new_epsy,
+            new_sigma_delta,
+            new_bunch_length,
         )
         self.current_step += 1
 
-    def update_with_ibsand_sr_at_next_step(
+    def update_with_ibs_and_sr_at_next_step(
         self,
         dt: float,
         ibs_rates: IBSAmplitudeGrowthRates,
+        # -----------------------------
+        # Parameters for the SR properties
         sr_eq_epsx: float,
         sr_eq_epsy: float,
         sr_eq_sigma_delta: float,
         sr_taux: float,
         sr_tauy: float,
         sr_tauz: float,
+        # -----------------------------
+        # Parameters needed for sigma_delta -> bunch_length conversion
         circumference: float,
         harmonic_number: int,
         total_energy: float,
@@ -126,6 +161,55 @@ class Records:
         damping times. Note that this assumes growth rates to be
         in amplitude convention (since xfields 0.23.0 and xtrack
         0.80.0).
+
+        Note
+        ----
+            It is important that the Synchrotron Radiation equilibrium
+            emittances are given in the same convention as the input
+            emittances: provide either geometric or normalized for both.
+
+        Parameters
+        ----------
+        dt : float
+            The time interval over which to compute
+            the emittances' evolution in [s].
+        ibs_rates : IBSAmplitudeGrowthRates
+            The IBS growth rates in amplitude convention,
+            in [1/s].
+        ----- Synchrotron Radiation parameters -----
+        sr_eq_epsx : float
+            Horizontal emittance at equilibrium from SR, in [m].
+        sr_eq_epsy : float
+            Vertical emittance at equilibrium from SR, in [m].
+        sr_eq_sigma_delta : float
+            Momentum spread at equilibrium from SR, in [-]. As
+            twiss results give 'eq_gemitt_zeta' one can convert
+            with sigma_delta = (gemitt_zeta / tw.bets0) ** 0.5
+        sr_taux : float
+            Horizontal damping time from SR, in [s]. This is
+            the first value of 'tw.damping_times_s'.
+        sr_tauy : float
+            Vertical damping time from SR, in [s]. This is
+            the second value of 'tw.damping_times_s'.
+        sr_tauz : float
+            Longitudinal damping time from SR, in [s]. This is
+            the last value of 'tw.damping_times_s'.
+        ----- Bunch length from sigma delta parameters -----
+        circumference : float
+            The ring circumference in [m].
+        harmonic_number : int
+            The harmonic number.
+        total_energy : float
+            The total energy of the particles in [eV].
+            (np.sqrt(particles.p0c[0]**2 + particles.mass0**2)).
+        slip_factor : float
+            The slip factor (as gotten from xsuite Twiss).
+        beta_rel : float
+            The relativistic beta.
+        rf_voltage : float
+            The RF voltage in [V] (config['V0max'] * 1e6).
+        reference_charge : float
+            The reference charge (this is xt.Particles.q0)
         """
         epsx, epsy, sigma_delta, _ = self.values_at_current_step
         # All is handled in this function right there
@@ -154,6 +238,10 @@ class Records:
         # Update the records - we took values at current step
         # to determine the values at current step + 1
         self.update_at_step(
-            self.current_step + 1, new_epsx, new_epsy, new_sigma_delta, new_bunch_length
+            self.current_step + 1,
+            new_epsx,
+            new_epsy,
+            new_sigma_delta,
+            new_bunch_length,
         )
         self.current_step += 1
