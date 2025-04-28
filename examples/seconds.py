@@ -26,8 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import xtrack as xt
 
-from evolutor._converters import energy_spread
-from evolutor._record import Records
+from evolutor import Records, energy_spread
 
 # Get a line and Twiss
 line = xt.Line.from_json("lhcb1.json")
