@@ -171,7 +171,9 @@ def ibs_and_sr_evolution(
     sr_eq_epsy : float
         Vertical emittance at equilibrium from SR, in [m].
     sr_eq_sigma_delta : float
-        Momentum spread at equilibrium from SR, in [-].
+        Momentum spread at equilibrium from SR, in [-]. As the
+        twiss results give 'eq_gemitt_zeta' one can convert
+        with sigma_delta = (gemitt_zeta / twiss.bets0) ** 0.5
     sr_taux : float
         Horizontal damping time from SR, in [s]. This is
         the first value of 'tw.damping_times_s'.
