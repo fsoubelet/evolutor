@@ -53,13 +53,13 @@ def ibs_evolution(
         The time interval over which to compute
         the emittances' evolution in [s].
     Kx : float
-        The horizontal emittance growth rate in
+        The horizontal IBS growth rate in
         amplitude convention, in [1/s].
     Ky : float
-        The vertical emittance growth rate in
+        The vertical IBS growth rate in
         amplitude convention, in [1/s].
     Kz : float
-        The longitudinal emittance growth rate in
+        The longitudinal IBS growth rate in
         amplitude convention, in [1/s].
     ----- Bunch length from sigma delta parameters -----
     circumference : float
@@ -157,13 +157,13 @@ def ibs_and_sr_evolution(
         The time interval over which to compute
         the emittances' evolution in [s].
     Kx : float
-        The horizontal emittance growth rate in
+        The horizontal IBS growth rate in
         amplitude convention, in [1/s].
     Ky : float
-        The vertical emittance growth rate in
+        The vertical IBS growth rate in
         amplitude convention, in [1/s].
     Kz : float
-        The longitudinal emittance growth rate in
+        The longitudinal IBS growth rate in
         amplitude convention, in [1/s].
     ----- Synchrotron Radiation parameters -----
     sr_eq_epsx : float
