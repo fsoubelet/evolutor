@@ -31,7 +31,7 @@ from evolutor import Records, energy_spread
 # Get a line and Twiss with radiation
 line = xt.Line.from_json("chrom-corr_DR.newlattice_2GHz.json")
 line.build_tracker()
-line.configure_radiation(model='mean')
+line.configure_radiation(model="mean")
 twiss = line.twiss(eneloss_and_damping=True)
 formalism = "nagaitsev"  # faster (use if there is no Dy)
 
@@ -99,8 +99,8 @@ for turn in range(1, nturns):
     results.update_with_ibs_and_sr_at_next_step(
         dt=dt,
         ibs_rates=rates,
-        sr_eq_epsx=twiss.eq_nemitt_x,
-        sr_eq_epsy=twiss.eq_nemitt_y,
+        sr_eq_epsx=twiss.eq_nemitt_x,  # nemitt everywhere
+        sr_eq_epsy=twiss.eq_nemitt_y,  # nemitt everywhere
         sr_eq_sigma_delta=sr_eq_sigma_delta,
         sr_taux=twiss.damping_constants_s[0],
         sr_tauy=twiss.damping_constants_s[1],
