@@ -10,6 +10,7 @@ formulae, over a given time interval.
 from __future__ import annotations
 
 import numpy as np
+from cycler import K
 
 from evolutor._converters import bunch_length
 from evolutor._jit import maybe_jit
@@ -216,13 +217,10 @@ def ibs_and_sr_evolution(
         -sr_eq_epsy
         + (sr_eq_epsy + epsy * (Ky * sr_tauy - 1.0)) * np.exp(2 * dt * (Ky - 1 / sr_tauy))
     ) / (Ky * sr_tauy - 1)
-    # For sigma delta we first compute the square to avoid gigantic formula
-    new_sigma_delta_square: float = (
-        -(sr_eq_sigma_delta**2)
-        + (sr_eq_sigma_delta**2 + sigma_delta**2 * (Kz * sr_tauz - 1))
-        * np.exp(2 * dt * (Kz - 1 / sr_tauz))
-    ) / (Kz * sr_tauz - 1)
-    new_sigma_delta = np.sqrt(new_sigma_delta_square)
+    new_sigma_delta: float = (
+        -sr_eq_sigma_delta
+        + (sr_eq_sigma_delta + sigma_delta * (Kz * sr_tauz - 1.0)) * np.exp(dt * (Kz - 1 / sr_tauz))
+    ) / (Kz * sr_tauz - 1.0)
     # ----------------------------------------------
     # Get new bunch length value from sigma delta (not exponential growth)
     sigma_E: float = new_sigma_delta * beta_rel**2  # get energy spread from sigma delta
