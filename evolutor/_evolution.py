@@ -213,7 +213,8 @@ def ibs_and_sr_evolution(
         + (sr_eq_epsx + epsx * (Kx * sr_taux - 1.0)) * np.exp(2 * dt * (Kx - 1 / sr_taux))
     ) / (Kx * sr_taux - 1)
     new_epsy: float = (
-        -sr_eq_epsy + (sr_eq_epsy + epsy * (Ky * sr_tauy - 1)) * np.exp(2 * dt * (Ky - 1 / sr_tauy))
+        -sr_eq_epsy
+        + (sr_eq_epsy + epsy * (Ky * sr_tauy - 1.0)) * np.exp(2 * dt * (Ky - 1 / sr_tauy))
     ) / (Ky * sr_tauy - 1)
     # For sigma delta we first compute the square to avoid gigantic formula
     new_sigma_delta_square: float = (
