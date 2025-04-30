@@ -207,21 +207,22 @@ def ibs_and_sr_evolution(
         and bunch length after the time interval dt.
     """
     # ----------------------------------------------
+    # Compute some terms that show up in the formulae
+    term_x: float = Kx * sr_taux - 1.0
+    term_y: float = Ky * sr_tauy - 1.0
+    term_z: float = Kz * sr_tauz - 1.0
+    # Exponential terms too, for clearer equations below
+    exp_x: float = np.exp(2 * dt * (Kx - 1 / sr_taux))
+    exp_y: float = np.exp(2 * dt * (Ky - 1 / sr_tauy))
+    exp_z: float = np.exp(2 * dt * (Kz - 1 / sr_tauz))
+    # ----------------------------------------------
     # Compute new transverse emittances and sigma_delta
-    new_epsx: float = (
-        -sr_eq_epsx
-        + (sr_eq_epsx + epsx * (Kx * sr_taux - 1.0)) * np.exp(2 * dt * (Kx - 1 / sr_taux))
-    ) / (Kx * sr_taux - 1)
-    new_epsy: float = (
-        -sr_eq_epsy
-        + (sr_eq_epsy + epsy * (Ky * sr_tauy - 1.0)) * np.exp(2 * dt * (Ky - 1 / sr_tauy))
-    ) / (Ky * sr_tauy - 1)
+    new_epsx: float = (-sr_eq_epsx + (sr_eq_epsx + epsx * term_x) * exp_x) / term_x
+    new_epsy: float = (-sr_eq_epsy + (sr_eq_epsy + epsy * term_y) * exp_y) / term_y
     # For sigma delta we first compute the square to avoid gigantic formula
     new_sigma_delta_square: float = (
-        -(sr_eq_sigma_delta**2)
-        + (sr_eq_sigma_delta**2 + sigma_delta**2 * (Kz * sr_tauz - 1))
-        * np.exp(2 * dt * (Kz - 1 / sr_tauz))
-    ) / (Kz * sr_tauz - 1)
+        -(sr_eq_sigma_delta**2) + (sr_eq_sigma_delta**2 + sigma_delta**2 * term_z) * exp_z
+    ) / term_z
     new_sigma_delta = np.sqrt(new_sigma_delta_square)
     # ----------------------------------------------
     # Get new bunch length value from sigma delta (not exponential growth)
