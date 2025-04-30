@@ -86,8 +86,8 @@ def ibs_evolution(
     """
     # ----------------------------------------------
     # Compute new transverse emittances and sigma_delta
-    new_epsx: float = epsx * np.exp(dt * 2 * Kx)
-    new_epsy: float = epsy * np.exp(dt * 2 * Ky)
+    new_epsx: float = epsx * np.exp(2 * dt * Kx)
+    new_epsy: float = epsy * np.exp(2 * dt * Ky)
     new_sigma_delta: float = sigma_delta * np.exp(dt * Kz)
     # ----------------------------------------------
     # Get new bunch length value from sigma delta (not exponential growth)
