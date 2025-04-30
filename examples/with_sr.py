@@ -4,9 +4,7 @@
 #   "matplotlib",
 #   "numpy",
 #   "setuptools",
-#   "xtrack>=0.80.0",
-#   "xfields>=0.23.0",
-#   "xpart>=0.22.0",
+#   "xsuite>=0.29.0",
 #   "evolutor",
 # ]
 # [tool.uv.sources]
