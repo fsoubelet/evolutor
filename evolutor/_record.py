@@ -16,6 +16,9 @@ import numpy as np
 from evolutor._evolution import ibs_and_sr_evolution, ibs_evolution
 
 if TYPE_CHECKING:
+    from pathlib import Path
+    from typing import BinaryIO
+
     from xfields.ibs import IBSAmplitudeGrowthRates
 
 
@@ -48,6 +51,48 @@ class Records:
             self.sigma_delta[self.current_step],
             self.bunch_length[self.current_step],
         )
+
+    def savez(self, file: str | Path | BinaryIO) -> None:
+        """
+        Save the record's data to disk using numpy's savez function.
+
+        Parameters
+        ----------
+        file : str | Path | BinaryIO
+            The file to save the data to. This can be a string
+            (filename), a Path object, or a binary file object.
+        """
+        np.savez(
+            file,
+            epsx=self.epsx,
+            epsy=self.epsy,
+            sigma_delta=self.sigma_delta,
+            bunch_length=self.bunch_length,
+        )
+
+    @classmethod
+    def load(cls, file: str | Path | BinaryIO) -> Records:
+        """
+        Load the record's data from disk using numpy's load function.
+
+        Parameters
+        ----------
+        file : str | Path | BinaryIO
+            The file to load the data from. This can be a string
+            (filename), a Path object, or a binary file object.
+
+        Returns
+        -------
+        Records
+            An instance of the Records class with the loaded data.
+        """
+        with np.load(file) as data:
+            instance = cls(nsteps=data["epsx"].size)
+            instance.epsx = data["epsx"]
+            instance.epsy = data["epsy"]
+            instance.sigma_delta = data["sigma_delta"]
+            instance.bunch_length = data["bunch_length"]
+        return instance
 
     def update_at_step(
         self, step: int, epsx: float, epsy: float, sigma_delta: float, bunch_length: float
