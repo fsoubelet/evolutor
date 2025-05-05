@@ -38,7 +38,9 @@ slip_factor = twiss.slip_factor
 beta_rel = twiss.beta0
 reference_charge = line.particle_ref.q0
 
-# Parameters to be set by the user and needed later
+# -------------------------------- #
+# Parameters to be set by the user #
+# -------------------------------- #
 harmonic_number = 34640
 RF_voltage = 4000000.0  # in [V]
 bunch_intensity = 180000000000.0  # in [ppb]

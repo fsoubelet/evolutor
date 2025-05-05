@@ -44,7 +44,9 @@ beta_rel = twiss.beta0
 reference_charge = line.particle_ref.q0
 sr_eq_sigma_delta = (twiss.eq_gemitt_zeta / twiss.bets0) ** 0.5
 
-# Parameters to be set by the user and needed later
+# -------------------------------- #
+# Parameters to be set by the user #
+# -------------------------------- #
 harmonic_number = 34640
 RF_voltage = 4000000.0  # in [V]
 bunch_intensity = 2.3e11  # in [ppb]
