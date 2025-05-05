@@ -108,7 +108,6 @@ class Records:
 
     def update_with_ibs_at_next_step(
         self,
-        dt: float,
         ibs_rates: IBSAmplitudeGrowthRates,
         # -----------------------------
         # Parameters needed for sigma_delta -> bunch_length conversion
@@ -122,9 +121,10 @@ class Records:
     ) -> None:
         """
         Update the records for the next step, provided with the
-        time delta between the steps and the IBS growth rates.
-        Note that this assumes growth rates to be in amplitude
-        convention (since xfields 0.23.0 and xtrack 0.80.0).
+        IBS growth rates. The instance will use its internal
+        (provided at init time) time step. Note that this assumes
+        growth rates to be in amplitude convention (since xfields
+        0.23.0 and xtrack 0.80.0), same as SR quantities.
 
         Parameters
         ----------
@@ -157,7 +157,7 @@ class Records:
             epsx=epsx,
             epsy=epsy,
             sigma_delta=sigma_delta,
-            dt=dt,
+            dt=self.dt,
             Kx=ibs_rates.Kx,
             Ky=ibs_rates.Ky,
             Kz=ibs_rates.Kz,
@@ -182,7 +182,6 @@ class Records:
 
     def update_with_ibs_and_sr_at_next_step(
         self,
-        dt: float,
         ibs_rates: IBSAmplitudeGrowthRates,
         # -----------------------------
         # Parameters for the SR properties
@@ -204,11 +203,11 @@ class Records:
     ) -> None:
         """
         Update the records for the next step, provided with the
-        time delta between the steps, the IBS growth rates and
-        the synchrotron radiation equilibrium values as well as
-        damping times. Note that this assumes growth rates to be
-        in amplitude convention (since xfields 0.23.0 and xtrack
-        0.80.0).
+        IBS growth rates and the synchrotron radiation equilibrium
+        values as well as damping times. The instance will use its
+        internal (provided at init time) time step. Note that this
+        assumes growth rates to be in amplitude convention (since
+        xfields 0.23.0 and xtrack 0.80.0), same as SR quantities.
 
         Note
         ----
@@ -265,7 +264,7 @@ class Records:
             epsx=epsx,
             epsy=epsy,
             sigma_delta=sigma_delta,
-            dt=dt,
+            dt=self.dt,
             Kx=ibs_rates.Kx,
             Ky=ibs_rates.Ky,
             Kz=ibs_rates.Kz,
