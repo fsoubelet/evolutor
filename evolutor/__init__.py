@@ -1,4 +1,4 @@
-__version__ = "0.3.2"
+__version__ = "0.4.0"
 
 from ._converters import bunch_length, energy_spread
 from ._evolution import ibs_and_sr_evolution, ibs_evolution
