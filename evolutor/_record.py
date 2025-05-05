@@ -28,7 +28,9 @@ class Records:
     Dataclass to store and compute intermediate step emittance values.
     """
 
+    dt: float  # time step in [s]
     nsteps: int  # number of steps to compute
+    times: np.ndarray = field(init=False)  # time at each step, in [s]
     epsx: np.ndarray = field(init=False)  # horizontal emittance
     epsy: np.ndarray = field(init=False)  # vertical emittance
     sigma_delta: np.ndarray = field(init=False)  # momentum spread
@@ -37,6 +39,7 @@ class Records:
 
     def __post_init__(self):
         # We know the steps, we can preallocate the arrays
+        self.times = np.arange(self.nsteps, dtype=int) * self.dt
         self.epsx = np.zeros(self.nsteps, dtype=np.float64)
         self.epsy = np.zeros(self.nsteps, dtype=np.float64)
         self.sigma_delta = np.zeros(self.nsteps, dtype=np.float64)
