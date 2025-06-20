@@ -33,60 +33,72 @@ def main(
         default=...,
         show_choices=True,
         help="IBS formalism to use for growth rates.",
+        rich_help_panel="IBS growth rates computing",
     ),
     rf_voltage: float = Option(
         min=0.0,
         default=...,
         help="RF voltage in [V].",
+        rich_help_panel="IBS growth rates computing",
     ),
     harmonic_number: int = Option(
         min=1,
         default=...,
         help="Harmonic number of the ring.",
+        rich_help_panel="IBS growth rates computing",
     ),
     bunch_intensity: float = Option(
         min=0.0,
         default=...,
         help="Bunch intensity in [ppb] (particles per bunch).",
+        rich_help_panel="IBS growth rates computing",
     ),
     nemitt_x: float = Option(
         min=0.0,
         default=...,
         help="Normalized emittance in the horizontal plane in [m].",
+        rich_help_panel="IBS growth rates computing",
     ),
     nemitt_y: float = Option(
         min=0.0,
         default=...,
         help="Normalized emittance in the vertical plane in [m].",
+        rich_help_panel="IBS growth rates computing",
     ),
     sigma_z: float = Option(
         min=0.0,
         default=...,
         help="Bunch length in [m].",
+        rich_help_panel="IBS growth rates computing",
     ),
     bunched: bool = Option(
         default=True,
         show_choices=True,
         help="Whether the beam is bunched or not. "
         "If False, the IBS growth rates are computed for a coasting beam.",
+        rich_help_panel="IBS growth rates computing",
     ),
     nseconds: int = Option(
         min=0,
-        help="Number of seconds to simulate. If mode is not 'seconds', this is ignored.",
+        help="Number of seconds to simulate. If mode is not 'seconds', this is rejected.",
+        rich_help_panel="Global simulation parameters",
     ),
     nturns: int = Option(
         min=1,
-        help="Number of turns to simulate. If mode is not 'turns', this is ignored.",
+        help="Number of turns to simulate. If mode is not 'turns', this is rejected.",
+        rich_help_panel="Global simulation parameters",
     ),
     dt: int = Option(
         min=0,
         help="The time step in [s] between two data points. "
         "If mode is 'seconds', this defaults to 1s. If mode is 'turns', this defaults to the revolution time.",
+        rich_help_panel="Global simulation parameters",
     ),
     recompute_step: int = Option(
         min=1,
         default=...,
         help="Re-compute the IBS growth rates every this many seconds or turns. ",
+        rich_help_panel="Global simulation parameters",
     ),
     export: Path = Option(
         file_okay=True,
@@ -94,6 +106,7 @@ def main(
         exists=False,
         resolve_path=True,
         help="If provided, export the results to a .npz file with the given name.",
+        rich_help_panel="Global simulation parameters",
     ),
 ) -> None:
     """Command line tool to run the IBS evolutor.
