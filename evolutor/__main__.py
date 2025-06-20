@@ -92,6 +92,7 @@ def main(
     ),
     dt: int = Option(
         min=0,
+        default=None,
         help="The time step in [s] between two data points. "
         "If mode is 'seconds', this defaults to 1s. If mode is 'turns', this defaults to the revolution time.",
         rich_help_panel="Global simulation parameters",
@@ -128,10 +129,12 @@ def main(
         if nturns is not None:
             print("Invalid option 'nturns' in 'seconds' mode.")
             raise Abort()
+
+        line = xt.Line.from_json(sequence)
         if dt is None:
             dt = 1  # default time step in [s]
+
         # And we run the simulation per seconds
-        line = xt.Line.from_json(sequence)
         handle_per_seconds(
             line=line,
             formalism=formalism,
@@ -156,10 +159,12 @@ def main(
         if nseconds is not None:
             print("Invalid option 'nseconds' in 'turns' mode.")
             raise Abort()
+
+        line = xt.Line.from_json(sequence)
         if dt is None:
             dt = line.twiss4d().T_rev0  # default time step in [s] (revolution time)
+
         # And we run the simulation per turns
-        line = xt.Line.from_json(sequence)
         handle_per_turns(
             line=line,
             formalism=formalism,
@@ -296,13 +301,13 @@ def handle_per_seconds(
     # Make a plot to show the user
     fig, axs = plt.subplot_mosaic([["epsx", "epsy"], ["sigd", "bl"]], sharex=True, figsize=(10, 7))
 
-    # Divide times by 3600 to get xaxis in [h]
+    # Potentially divide times by 3600 to get xaxis in [h]
     times = results.times / 3600 if np.max(results.times) > 3600 else results.times
     time_unit = "h" if np.max(results.times) > 3600 else "s"
-    axs["epsx"].plot(times / 3600, 1e6 * results.epsx, lw=2)
-    axs["epsy"].plot(times / 3600, 1e6 * results.epsy, lw=2)
-    axs["sigd"].plot(times / 3600, 1e3 * results.sigma_delta, lw=2)
-    axs["bl"].plot(times / 3600, 1e2 * results.bunch_length, lw=2)
+    axs["epsx"].plot(times, 1e6 * results.epsx, lw=2)
+    axs["epsy"].plot(times, 1e6 * results.epsy, lw=2)
+    axs["sigd"].plot(times, 1e3 * results.sigma_delta, lw=2)
+    axs["bl"].plot(times, 1e2 * results.bunch_length, lw=2)
 
     # Axes parameters
     axs["epsx"].set_ylabel(r"$\varepsilon_{x}^{n}$ [$10^{-6}$m]")
