@@ -36,6 +36,9 @@ cli = [
     "click",
 ]
 
+[project.scripts]
+evolutor = "evolutor.__main__:app"  # works for 'uv tool install'
+
 # ----- Dev Tools Configuration ----- #
 
 [tool.isort]
