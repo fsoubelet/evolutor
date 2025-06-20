@@ -14,7 +14,7 @@ app = Typer(no_args_is_help=True)
 
 @app.command()
 def main(
-    sequence: str | Path = Argument(
+    sequence: Path = Argument(
         file_okay=True,
         dir_okay=False,
         exists=True,
@@ -86,7 +86,7 @@ def main(
         default=...,
         help="Re-compute the IBS growth rates every this many seconds or turns. ",
     ),
-    export: str | Path = Option(
+    export: Path = Option(
         file_okay=True,
         dir_okay=False,
         exists=False,
@@ -152,6 +152,7 @@ def main(
             bunched=bunched,
             export=export,
         )
+
 
 # ----- Helper Functions ----- #
 
@@ -446,3 +447,9 @@ def handle_per_turns(
 
     plt.tight_layout()
     plt.show()
+
+
+# ----- Entrypoint ----- #
+
+if __name__ == "__main__":
+    app()
