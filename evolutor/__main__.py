@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
-from typer import Argument, Exit, Option, Typer
+from typer import Argument, Abort, Option, Typer
 
 import numpy as np
 import xtrack as xt
@@ -14,6 +14,7 @@ app = Typer(no_args_is_help=True)
 
 @app.command()
 def main(
+    # ----- Arguments ------ #
     sequence: Path = Argument(
         file_okay=True,
         dir_okay=False,
@@ -27,6 +28,7 @@ def main(
         show_choices=True,
         help="Simulation mode, either per 'seconds' or 'turns'.",
     ),
+    # ----- Options ------ #
     formalism: Formalisms = Option(
         default=...,
         show_choices=True,
@@ -101,17 +103,19 @@ def main(
     mode specified. The results can be exported to a .npz file if requested.
     """
     sequence = Path(sequence)
-    line = xt.Line.from_json(sequence)
 
     if mode == Modes.seconds:
         # We make quick cheks: need nseconds, need to not provide nturns
         if nseconds is None:
-            raise Exit(code=1)
+            print("Please provide 'nseconds' in this mode.")
+            raise Abort()
         if nturns is not None:
-            raise Exit(code=1)
+            print("Invalid option 'nturns' in 'seconds' mode.")
+            raise Abort()
         if dt is None:
             dt = 1  # default time step in [s]
         # And we run the simulation per seconds
+        line = xt.Line.from_json(sequence)
         handle_per_seconds(
             line=line,
             formalism=formalism,
@@ -131,12 +135,15 @@ def main(
     elif mode == Modes.turns:
         # We make quick checks: need nturns, need to not provide nseconds
         if nturns is None:
-            raise Exit(code=1)
+            print("Please provide 'nturns' in this mode.")
+            raise Abort(code=1)
         if nseconds is not None:
-            raise Exit(code=1)
+            print("Invalid option 'nseconds' in 'turns' mode.")
+            raise Abort()
         if dt is None:
             dt = line.twiss4d().T_rev0  # default time step in [s] (revolution time)
         # And we run the simulation per turns
+        line = xt.Line.from_json(sequence)
         handle_per_turns(
             line=line,
             formalism=formalism,
