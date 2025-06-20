@@ -71,6 +71,7 @@ class Records:
             epsy=self.epsy,
             sigma_delta=self.sigma_delta,
             bunch_length=self.bunch_length,
+            time_s=self.times,
         )
 
     @classmethod
@@ -90,11 +91,12 @@ class Records:
             An instance of the Records class with the loaded data.
         """
         with np.load(file) as data:
-            instance = cls(nsteps=data["epsx"].size)
+            instance = cls(nsteps=data["epsx"].size, dt=data["time_s"][1] - data["time_s"][0])
             instance.epsx = data["epsx"]
             instance.epsy = data["epsy"]
             instance.sigma_delta = data["sigma_delta"]
             instance.bunch_length = data["bunch_length"]
+            instance.times = data["time_s"]
         return instance
 
     def update_at_step(
@@ -158,9 +160,9 @@ class Records:
             epsy=epsy,
             sigma_delta=sigma_delta,
             dt=self.dt,
-            Kx=ibs_rates.Kx,
-            Ky=ibs_rates.Ky,
-            Kz=ibs_rates.Kz,
+            Kx=ibs_rates.Kx,  # type: ignore  (it's an xofield)
+            Ky=ibs_rates.Ky,  # type: ignore  (it's an xofield)
+            Kz=ibs_rates.Kz,  # type: ignore  (it's an xofield)
             circumference=circumference,
             harmonic_number=harmonic_number,
             total_energy=total_energy,
@@ -265,9 +267,9 @@ class Records:
             epsy=epsy,
             sigma_delta=sigma_delta,
             dt=self.dt,
-            Kx=ibs_rates.Kx,
-            Ky=ibs_rates.Ky,
-            Kz=ibs_rates.Kz,
+            Kx=ibs_rates.Kx,  # type: ignore  (it's an xofield)
+            Ky=ibs_rates.Ky,  # type: ignore  (it's an xofield)
+            Kz=ibs_rates.Kz,  # type: ignore  (it's an xofield)
             sr_eq_epsx=sr_eq_epsx,
             sr_eq_epsy=sr_eq_epsy,
             sr_eq_sigma_delta=sr_eq_sigma_delta,
