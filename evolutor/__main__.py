@@ -80,11 +80,13 @@ def main(
     ),
     nseconds: int = Option(
         min=0,
+        default=None,
         help="Number of seconds to simulate. If mode is not 'seconds', this is rejected.",
         rich_help_panel="Global simulation parameters",
     ),
     nturns: int = Option(
         min=1,
+        default=None,
         help="Number of turns to simulate. If mode is not 'turns', this is rejected.",
         rich_help_panel="Global simulation parameters",
     ),
@@ -105,6 +107,7 @@ def main(
         dir_okay=False,
         exists=False,
         resolve_path=True,
+        default=None,
         help="If provided, export the results to a .npz file with the given name.",
         rich_help_panel="Global simulation parameters",
     ),
