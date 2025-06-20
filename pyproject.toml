@@ -31,6 +31,10 @@ fast = [
 examples = [
     "matplotlib",
 ]
+cli = [
+    "evolutor[examples]",
+    "click",
+]
 
 # ----- Dev Tools Configuration ----- #
 
@@ -41,7 +45,7 @@ filter_files = true
 force_grid_wrap = 0
 force_single_line = false
 include_trailing_comma = true
-known_first_party = "pyhdtoolkit"
+known_first_party = "evolutor"
 known_third_party = "pytest"
 line_length = 100
 lines_between_types = 1
@@ -61,11 +65,8 @@ exclude = '''
   | \.tox
   | \.venv
   | _build
-  | buck-out
   | build
   | dist
-  | tests/.*/setup.py
-  | acc-models-lhc
 )/
 '''
 
@@ -81,7 +82,6 @@ exclude = [
   "buck-out",
   "build",
   "dist",
-  "acc-models-lhc",
 ]
 
 # Assume Python 3.10+
