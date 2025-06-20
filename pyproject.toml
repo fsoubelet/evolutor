@@ -37,7 +37,6 @@ cli = [
 ]
 
 [project.scripts]
-ibs = "evolutor.__main__:app"
 evolutor = "evolutor.__main__:app"  # works for 'uv tool install'
 
 # ----- Dev Tools Configuration ----- #
