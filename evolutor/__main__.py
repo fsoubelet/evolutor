@@ -1,13 +1,23 @@
 from __future__ import annotations
-from pathlib import Path
-from typer import Argument, Abort, Option, Typer
 
+import logging
+
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 import numpy as np
 import xtrack as xt
-import matplotlib.pyplot as plt
+
 from matplotlib.ticker import MaxNLocator
+from rich.logging import RichHandler
+from typer import Abort, Argument, Option, Typer
+
 from evolutor import Records, energy_spread
 from evolutor._constants import Formalisms, Modes
+
+logging.basicConfig(level="NOTSET", handlers=[RichHandler(level="NOTSET")])
+LOGGER = logging.getLogger("evolutor")
+
 
 app = Typer(no_args_is_help=True)
 
@@ -124,10 +134,10 @@ def main(
     if mode == Modes.seconds:
         # We make quick cheks: need nseconds, need to not provide nturns
         if nseconds is None:
-            print("Please provide 'nseconds' in this mode.")
+            LOGGER.error("Please provide 'nseconds' in this mode.")
             raise Abort()
         if nturns is not None:
-            print("Invalid option 'nturns' in 'seconds' mode.")
+            LOGGER.error("Invalid option 'nturns' in 'seconds' mode.")
             raise Abort()
 
         line = xt.Line.from_json(sequence)
@@ -154,10 +164,10 @@ def main(
     elif mode == Modes.turns:
         # We make quick checks: need nturns, need to not provide nseconds
         if nturns is None:
-            print("Please provide 'nturns' in this mode.")
+            LOGGER.error("Please provide 'nturns' in this mode.")
             raise Abort(code=1)
         if nseconds is not None:
-            print("Invalid option 'nseconds' in 'turns' mode.")
+            LOGGER.error("Invalid option 'nseconds' in 'turns' mode.")
             raise Abort()
 
         line = xt.Line.from_json(sequence)
