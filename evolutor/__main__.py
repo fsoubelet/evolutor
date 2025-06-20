@@ -142,9 +142,11 @@ def main(
 
         line = xt.Line.from_json(sequence)
         if dt is None:
+            LOGGER.info("Using default time step of 1s.")
             dt = 1  # default time step in [s]
 
         # And we run the simulation per seconds
+        LOGGER.info("Starting simulation, per seconds mode.")
         handle_per_seconds(
             line=line,
             formalism=formalism,
@@ -172,9 +174,11 @@ def main(
 
         line = xt.Line.from_json(sequence)
         if dt is None:
+            LOGGER.info("Using default time step of the line's revolution time.")
             dt = line.twiss4d().T_rev0  # default time step in [s] (revolution time)
 
         # And we run the simulation per turns
+        LOGGER.info("Starting simulation, per turns mode.")
         handle_per_turns(
             line=line,
             formalism=formalism,
