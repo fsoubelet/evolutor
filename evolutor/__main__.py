@@ -312,14 +312,7 @@ def handle_per_seconds(
     # Export results if requested
     if export is not None:
         LOGGER.info(f"Exporting results in 'npz' format at {export}.")
-        np.savez(
-            export,
-            nemitt_x=results.epsx,
-            nemitt_y=results.epsy,
-            sigma_delta=results.sigma_delta,
-            bunch_length=results.bunch_length,
-            time_s=results.times,
-        )
+        results.savez(export)
 
     # Make a plot to show the user
     fig, axs = plt.subplot_mosaic([["epsx", "epsy"], ["sigd", "bl"]], sharex=True, figsize=(10, 7))
@@ -463,14 +456,7 @@ def handle_per_turns(
     # Export results if requested
     if export is not None:
         LOGGER.info(f"Exporting results in 'npz' format at {export}.")
-        np.savez(
-            export,
-            nemitt_x=results.epsx,
-            nemitt_y=results.epsy,
-            sigma_delta=results.sigma_delta,
-            bunch_length=results.bunch_length,
-            turn=turns,
-        )
+        results.savez(export)
 
     # Make a plot to show the user
     fig, axs = plt.subplot_mosaic([["epsx", "epsy"], ["sigd", "bl"]], sharex=True, figsize=(10, 7))
