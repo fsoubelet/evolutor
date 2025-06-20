@@ -10,14 +10,17 @@ import xtrack as xt
 
 from matplotlib.ticker import MaxNLocator
 from rich.logging import RichHandler
+from rich.progress import Progress
 from typer import Abort, Argument, Option, Typer
 
 from evolutor import Records, energy_spread
 from evolutor._constants import Formalisms, Modes
 
-logging.basicConfig(level="NOTSET", handlers=[RichHandler(level="NOTSET")])
+logging.basicConfig(level="DEBUG", handlers=[RichHandler(level="NOTSET")])
+logging.getLogger("xfields").setLevel(logging.CRITICAL)
+logging.getLogger("numba").setLevel(logging.CRITICAL)
+logging.getLogger("xdeps").setLevel(logging.CRITICAL)
 LOGGER = logging.getLogger("evolutor")
-
 
 app = Typer(no_args_is_help=True)
 
@@ -266,43 +269,46 @@ def handle_per_seconds(
     )
     sigma_delta = sigma_e / (beta_rel**2)
 
-    # Prepare records
+    # Prepare records & insert initial values
     nsteps = int(nseconds / dt)  # nsteps = nseconds / step_size
     results = Records(dt=dt, nsteps=nsteps)
-    # Insert the initial values
     results.update_at_step(
         0, epsx=nemitt_x, epsy=nemitt_y, sigma_delta=sigma_delta, bunch_length=sigma_z
     )
 
     # Run the simulation
-    for step in range(1, nsteps):
-        # Potentially recompute growth rates
-        if (results.times[step] % recompute_step == 0) or (step == 1):
-            rates = twiss.get_ibs_growth_rates(
-                formalism=formalism,
-                total_beam_intensity=bunch_intensity,
-                nemitt_x=results.epsx[step - 1],
-                nemitt_y=results.epsy[step - 1],
-                sigma_delta=results.sigma_delta[step - 1],
-                bunch_length=results.bunch_length[step - 1],
-                bunched=bunched,
-            )
-            print(f"At {results.times[step]:d}s: re-computed IBS rates - {rates}")
+    with Progress(expand=True) as progress:
+        task = progress.add_task("Running simulation...", total=nsteps)
+        for step in range(1, nsteps):
+            # Potentially recompute growth rates
+            if (results.times[step] % recompute_step == 0) or (step == 1):
+                rates = twiss.get_ibs_growth_rates(
+                    formalism=formalism,
+                    total_beam_intensity=bunch_intensity,
+                    nemitt_x=results.epsx[step - 1],
+                    nemitt_y=results.epsy[step - 1],
+                    sigma_delta=results.sigma_delta[step - 1],
+                    bunch_length=results.bunch_length[step - 1],
+                    bunched=bunched,
+                )
+                LOGGER.debug(f"At {results.times[step]:d}s: re-computed IBS rates - {rates}")
 
-        # Compute the new emittances etc and update
-        results.update_with_ibs_at_next_step(
-            ibs_rates=rates,  # type: ignore
-            circumference=circumference,
-            harmonic_number=harmonic_number,
-            total_energy=total_energy,
-            slip_factor=slip_factor,
-            beta_rel=beta_rel,
-            rf_voltage=rf_voltage,
-            reference_charge=reference_charge,
-        )
+            # Compute the new emittances etc and update
+            results.update_with_ibs_at_next_step(
+                ibs_rates=rates,  # type: ignore
+                circumference=circumference,
+                harmonic_number=harmonic_number,
+                total_energy=total_energy,
+                slip_factor=slip_factor,
+                beta_rel=beta_rel,
+                rf_voltage=rf_voltage,
+                reference_charge=reference_charge,
+            )
+            progress.update(task, advance=1)
 
     # Export results if requested
     if export is not None:
+        LOGGER.info(f"Exporting results in 'npz' format at {export}.")
         np.savez(
             export,
             nemitt_x=results.epsx,
@@ -414,43 +420,46 @@ def handle_per_turns(
     )
     sigma_delta = sigma_e / (beta_rel**2)
 
-    # Prepare records
+    # Prepare records & insert initial values
     turns = np.arange(nturns, dtype=int)
     results = Records(dt=dt, nsteps=nturns)
-    # Insert the initial values
     results.update_at_step(
         0, epsx=nemitt_x, epsy=nemitt_y, sigma_delta=sigma_delta, bunch_length=sigma_z
     )
 
     # Run the simulation
-    for step in range(1, nturns):
-        # Potentially recompute growth rates
-        if (step % recompute_step == 0) or (step == 1):
-            rates = twiss.get_ibs_growth_rates(
-                formalism=formalism,
-                total_beam_intensity=bunch_intensity,
-                nemitt_x=results.epsx[step - 1],
-                nemitt_y=results.epsy[step - 1],
-                sigma_delta=results.sigma_delta[step - 1],
-                bunch_length=results.bunch_length[step - 1],
-                bunched=bunched,
-            )
-            print(f"Turn {step:d}: re-computed IBS rates - {rates}")
+    with Progress(expand=True) as progress:
+        task = progress.add_task("Running simulation...", total=nsteps)
+        for step in range(1, nturns):
+            # Potentially recompute growth rates
+            if (step % recompute_step == 0) or (step == 1):
+                rates = twiss.get_ibs_growth_rates(
+                    formalism=formalism,
+                    total_beam_intensity=bunch_intensity,
+                    nemitt_x=results.epsx[step - 1],
+                    nemitt_y=results.epsy[step - 1],
+                    sigma_delta=results.sigma_delta[step - 1],
+                    bunch_length=results.bunch_length[step - 1],
+                    bunched=bunched,
+                )
+                LOGGER.debug(f"Turn {step:d}: re-computed IBS rates - {rates}")
 
-        # Compute the new emittances etc and update
-        results.update_with_ibs_at_next_step(
-            ibs_rates=rates,  # type: ignore
-            circumference=circumference,
-            harmonic_number=harmonic_number,
-            total_energy=total_energy,
-            slip_factor=slip_factor,
-            beta_rel=beta_rel,
-            rf_voltage=rf_voltage,
-            reference_charge=reference_charge,
-        )
+            # Compute the new emittances etc and update
+            results.update_with_ibs_at_next_step(
+                ibs_rates=rates,  # type: ignore
+                circumference=circumference,
+                harmonic_number=harmonic_number,
+                total_energy=total_energy,
+                slip_factor=slip_factor,
+                beta_rel=beta_rel,
+                rf_voltage=rf_voltage,
+                reference_charge=reference_charge,
+            )
+            progress.update(task, advance=1)
 
     # Export results if requested
     if export is not None:
+        LOGGER.info(f"Exporting results in 'npz' format at {export}.")
         np.savez(
             export,
             nemitt_x=results.epsx,
