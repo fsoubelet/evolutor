@@ -17,9 +17,10 @@ from evolutor import Records, energy_spread
 from evolutor._constants import Formalisms, Modes
 
 logging.basicConfig(level="DEBUG", handlers=[RichHandler(level="NOTSET")])
-logging.getLogger("xfields").setLevel(logging.CRITICAL)
 logging.getLogger("numba").setLevel(logging.CRITICAL)
 logging.getLogger("xdeps").setLevel(logging.CRITICAL)
+logging.getLogger("xfields").setLevel(logging.CRITICAL)
+logging.getLogger("matplotlib").setLevel(logging.CRITICAL)
 LOGGER = logging.getLogger("evolutor")
 
 app = Typer(no_args_is_help=True)
@@ -198,6 +199,8 @@ def main(
             export=export,
         )
 
+    LOGGER.info("Simulation completed successfully.")
+
 
 # ----- Helper Functions ----- #
 
@@ -277,7 +280,7 @@ def handle_per_seconds(
     )
 
     # Run the simulation
-    with Progress(expand=True) as progress:
+    with Progress(refresh_per_second=20, expand=True) as progress:
         task = progress.add_task("Running simulation...", total=nsteps)
         for step in range(1, nsteps):
             # Potentially recompute growth rates
@@ -428,8 +431,8 @@ def handle_per_turns(
     )
 
     # Run the simulation
-    with Progress(expand=True) as progress:
-        task = progress.add_task("Running simulation...", total=nsteps)
+    with Progress(refresh_per_second=20, expand=True) as progress:
+        task = progress.add_task("Running simulation...", total=nturns)
         for step in range(1, nturns):
             # Potentially recompute growth rates
             if (step % recompute_step == 0) or (step == 1):
