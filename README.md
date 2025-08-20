@@ -16,3 +16,23 @@ To install with `uv`:
 ```bash
 uv pip install --index https://test.pypi.org/simple/ --index-strategy unsafe-best-match evolutor
 ```
+
+## Usage
+
+```bash
+python -m evolutor examples/lhcb1.json seconds \
+    --formalism nagaitsev \
+    --rf-voltage 4000000.0 \
+    --harmonic-number 34640 \
+    --bunch-intensity 192000000000.0 \
+    --nemitt-x 2.2e-06 \
+    --nemitt-y 2.2e-06 \
+    --sigma-z 0.08993773646299315 \
+    --nseconds 7200 \
+    --recompute-step 50 \
+    --export data_nag_secs.npz
+```
+
+## License
+
+This package is distributed under the MIT License. See the [LICENSE](LICENSE) file for more details.
