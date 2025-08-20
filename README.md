@@ -4,6 +4,9 @@ A simple package with very minimal functionality to handle the analytical evolut
 
 ## Installing
 
+> [!WARNING]
+> An `evolutor` package exists on PyPI, but it is not this one.
+
 The package being a prototype, it is only deployed on `test-pypi`.
 It can be installed with `pip` by specifying the test index:
 
