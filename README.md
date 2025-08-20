@@ -19,6 +19,9 @@ uv pip install --index https://test.pypi.org/simple/ --index-strategy unsafe-bes
 
 ## Usage
 
+For default behavior and quick simulations, a command line interface is provided.
+Simply passing the JSON file of your lattice, beam and formalism parameters will run the main evolution loop.
+
 ```bash
 python -m evolutor examples/lhcb1.json seconds \
     --formalism nagaitsev \
@@ -31,6 +34,40 @@ python -m evolutor examples/lhcb1.json seconds \
     --nseconds 7200 \
     --recompute-step 50 \
     --export data_nag_secs.npz
+```
+
+For finer control, using the Python API is recommended.
+The package exposes a structure to hold results and compute beam parameters' evolution, but more elements need to be set up manually.
+It does allow controlling every aspect of the evolution process, including additional customizations.
+
+```python
+from evolutor import Records
+
+# set up parameters
+nturns = 10_000
+harmonic_number = 34640
+# sigma_e = ...
+
+# prepare records
+results = Records(dt=line.twiss().T_rev0, nsteps=nturns)
+# ...
+
+# Run the loop yourself
+# Now this loop handles everything
+for step in range(1, nturns):
+    # Potentially recompute growth rates
+    if (step % recompute_step == 0) or (step == 1):
+        rates = twiss.get_ibs_growth_rates(...)
+
+    # Compute the new emittances etc and update
+    results.update_with_ibs_at_next_step(...)
+```
+
+Detailed examples are provided for each mode in the `examples` directory.
+They can be run isolated with `uv`:
+
+```bash
+uv run examples/seconds.py
 ```
 
 ## License
