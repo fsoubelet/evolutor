@@ -12,6 +12,10 @@
 # [[tool.uv.index]]
 # name = "testpypi"
 # url = "https://test.pypi.org/simple/"
+# default = true  # default = lowest priority -> try if packages not found in other indexes
+# [[tool.uv.index]]
+# name = "pypi"
+# url = "https://pypi.org/simple"
 # ///
 
 """
