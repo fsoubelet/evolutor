@@ -32,7 +32,7 @@ examples = [
     "matplotlib",
 ]
 cli = [
-    "evolutor[fast, examples]",
+    "evolutor[examples]",
     "typer",
 ]
 
