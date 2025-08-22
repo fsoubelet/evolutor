@@ -1,13 +1,11 @@
 from __future__ import annotations
 
 import logging
-
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import xtrack as xt
-
 from matplotlib.ticker import MaxNLocator
 from rich.logging import RichHandler
 from rich.progress import Progress
@@ -252,7 +250,7 @@ def handle_per_seconds(
     export : str | None, optional
         If provided, export the results to a .npz file with the given name.
     """
-    twiss = line.twiss4d()
+    twiss = line.twiss(compute_chromatic_properties=True)  # might be overkill
     circumference = line.get_length()
     total_energy = np.sqrt(line.particle_ref.p0c[0] ** 2 + line.particle_ref.mass0**2)  # in [eV]
     slip_factor = twiss.slip_factor
@@ -280,7 +278,7 @@ def handle_per_seconds(
     )
 
     # Run the simulation
-    with Progress(refresh_per_second=20, expand=True) as progress:
+    with Progress(refresh_per_second=10, expand=True) as progress:
         task = progress.add_task("Running simulation...", total=nsteps)
         for step in range(1, nsteps):
             # Potentially recompute growth rates
@@ -396,7 +394,7 @@ def handle_per_turns(
     export : str | None, optional
         If provided, export the results to a .npz file with the given name.
     """
-    twiss = line.twiss4d()
+    twiss = line.twiss(compute_chromatic_properties=True)  # might be overkill
     circumference = line.get_length()
     total_energy = np.sqrt(line.particle_ref.p0c[0] ** 2 + line.particle_ref.mass0**2)  # in [eV]
     slip_factor = twiss.slip_factor
@@ -424,7 +422,7 @@ def handle_per_turns(
     )
 
     # Run the simulation
-    with Progress(refresh_per_second=20, expand=True) as progress:
+    with Progress(refresh_per_second=10, expand=True) as progress:
         task = progress.add_task("Running simulation...", total=nturns)
         for step in range(1, nturns):
             # Potentially recompute growth rates
