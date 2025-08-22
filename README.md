@@ -14,7 +14,7 @@ It can be installed with `pip` by specifying the test index:
 python -m pip install --index-url https://test.pypi.org/simple/ evolutor
 ```
 
-To install with `uv`:
+To install with `uv pip`:
 
 ```bash
 uv pip install --index https://test.pypi.org/simple/ --index-strategy unsafe-best-match evolutor
