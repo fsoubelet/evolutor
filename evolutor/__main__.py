@@ -316,8 +316,9 @@ def handle_per_seconds(
     fig, axs = plt.subplot_mosaic([["epsx", "epsy"], ["sigd", "bl"]], sharex=True, figsize=(10, 7))
 
     # Potentially divide times by 3600 to get xaxis in [h]
-    times = results.times / 3600 if np.max(results.times) > 3600 else results.times
-    time_unit = "h" if np.max(results.times) > 3600 else "s"
+    hour_in_s: int = 3600
+    times = results.times / hour_in_s if np.max(results.times) > hour_in_s else results.times
+    time_unit = "h" if np.max(results.times) > hour_in_s else "s"
     axs["epsx"].plot(times, 1e6 * results.epsx, lw=2)
     axs["epsy"].plot(times, 1e6 * results.epsy, lw=2)
     axs["sigd"].plot(times, 1e3 * results.sigma_delta, lw=2)

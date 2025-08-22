@@ -21,9 +21,9 @@ def ibs_evolution(
     epsy: float,
     sigma_delta: float,
     dt: float,
-    Kx: float,
-    Ky: float,
-    Kz: float,
+    Kx: float,  # noqa: N803
+    Ky: float,  # noqa: N803
+    Kz: float,  # noqa: N803
     # -----------------------------
     # Parameters needed for sigma_delta -> bunch_length conversion
     circumference: float,
@@ -91,13 +91,13 @@ def ibs_evolution(
     new_sigma_delta: float = sigma_delta * np.exp(dt * Kz)
     # ----------------------------------------------
     # Get new bunch length value from sigma delta (not exponential growth)
-    sigma_E: float = new_sigma_delta * beta_rel**2  # get energy spread from sigma delta
+    sigma_e: float = new_sigma_delta * beta_rel**2  # get energy spread from sigma delta
     new_bunch_length: float = bunch_length(
         circumference,
         harmonic_number,
         total_energy,
         slip_factor,
-        sigma_E,
+        sigma_e,
         beta_rel,
         rf_voltage,
         reference_charge,
@@ -111,9 +111,9 @@ def ibs_and_sr_evolution(
     epsy: float,
     sigma_delta: float,
     dt: float,
-    Kx: float,
-    Ky: float,
-    Kz: float,
+    Kx: float,  # noqa: N803
+    Ky: float,  # noqa: N803
+    Kz: float,  # noqa: N803
     # -----------------------------
     # Parameters for the SR properties
     sr_eq_epsx: float,
@@ -226,13 +226,13 @@ def ibs_and_sr_evolution(
     new_sigma_delta = np.sqrt(new_sigma_delta_square)
     # ----------------------------------------------
     # Get new bunch length value from sigma delta (not exponential growth)
-    sigma_E: float = new_sigma_delta * beta_rel**2  # get energy spread from sigma delta
+    sigma_e: float = new_sigma_delta * beta_rel**2  # get energy spread from sigma delta
     new_bunch_length: float = bunch_length(
         circumference,
         harmonic_number,
         total_energy,
         slip_factor,
-        sigma_E,
+        sigma_e,
         beta_rel,
         rf_voltage,
         reference_charge,

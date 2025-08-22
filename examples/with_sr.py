@@ -57,7 +57,7 @@ bunch_intensity = 2.3e11  # in [ppb]
 nemitt_x = 2.1e-06  # in [m]
 nemitt_y = 2.1e-06  # in [m]
 bl = 1.3e-9  # bunch length in [s]
-sigma_z = bl / 4.0*(c*beta_rel)   # in [m]
+sigma_z = bl / 4.0 * (c * beta_rel)  # in [m]
 sigma_e = energy_spread(
     circumference,
     harmonic_number=harmonic_number,
