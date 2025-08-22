@@ -5,6 +5,16 @@ build-backend = "hatchling.build"
 [tool.hatch.version]
 path = "evolutor/__init__.py"
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/docs",
+  "/docker",
+  "/examples",
+  "/lhc_checks",
+  "/tests",
+]
+
 [project]
 name = "evolutor"
 readme = "README.md"
