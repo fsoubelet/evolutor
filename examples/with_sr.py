@@ -35,10 +35,9 @@ from scipy.constants import c
 
 from evolutor import Records, energy_spread
 
-# Get LHC line and Twiss
+# Get LHC line and Twiss (with radiation)
 lhcb1_file = Path(__file__).parent / "lhcb1.json"
 line = xt.Line.from_json(lhcb1_file)
-line.build_tracker()
 line.configure_radiation(model="mean")
 twiss = line.twiss(eneloss_and_damping=True)
 formalism = "bjorken-mtingwa"  # or "nagaitsev" (faster) if there is no Dy
@@ -73,16 +72,17 @@ sigma_e = energy_spread(
 )
 sigma_delta = sigma_e / (beta_rel**2)
 
-# We hardcode these SR times as for the
-# LHC twiss struggles to compute them
-# TODO: use Twiss's energy loss per turn
-# and compute from there
-sr_tau_x = 56 * 3600  # 56h in [s]
-# sr_tau_x = twiss./damping_times[0]  # in [s]
-sr_tau_y = 56 * 3600  # 56h in [s]
-# sr_tau_y = twiss./damping_times[1]  # in [s]
-sr_tau_z = 28 * 3600  # 28h in [s]
-# sr_tau_z = twiss./damping_times[2]  # in [s]
+# Determine SR damping times manually as twiss struggles
+# with LHC (note this assumes Jx = Jy = 1 and Jz = 2)
+U0_eV = twiss.eneloss_turn
+sr_tau_x = 2 * total_energy * twiss.T_rev0 / U0_eV  # in [s]
+sr_tau_y = 2 * total_energy * twiss.T_rev0 / U0_eV  # in [s]
+sr_tau_z = 2 * total_energy * twiss.T_rev0 / (2 * U0_eV)  # in [s]
+
+# For a lepton machine where it's clear, use
+# sr_tau_x = twiss.damping_constants_s[0]  # in [s]
+# sr_tau_y = twiss.damping_constants_s[1]  # in [s]
+# sr_tau_z = twiss.damping_constants_s[2]  # in [s]
 
 # SET THESE TO DETERMINE THE SIMULATION - do not make recompute_step too high
 nseconds = 8 * 3_600  # this is 8h of beam time simulated
