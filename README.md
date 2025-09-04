@@ -1,6 +1,6 @@
 # Evolutor
 
-A simple package with very minimal functionality to handle the analytical evolution of beam parameters from the effect of Intra Beam Scattering.
+A simple package with very minimal functionality to handle the analytical evolution of beam parameters from the effect of Intra Beam Scattering, and potentially also Synchrotron Radiation.
 
 ## Installing
 
