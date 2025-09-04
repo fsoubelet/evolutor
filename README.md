@@ -22,6 +22,8 @@ uv pip install --index https://test.pypi.org/simple/ --index-strategy unsafe-bes
 
 ## Usage
 
+### Command Line
+
 For default behavior and quick simulations, a command line interface is provided.
 Simply passing the JSON file of your lattice, beam and formalism parameters will run the main evolution loop.
 
@@ -38,6 +40,76 @@ python -m evolutor examples/lhcb1.json seconds \
     --recompute-step 50 \
     --export data_nag_secs.npz
 ```
+
+Detailed usage of the CLI goes as:
+
+```bash
+Usage: python -m evolutor [OPTIONS] SEQUENCE [MODE]
+
+Command line tool to run the IBS evolutor.
+
+Provided with a sequence file and required parameters, this tool runs the IBS evolutor simulation either per
+seconds or per turns, depending on the mode specified. The results can be exported to a .npz file if requested.
+
+╭─ Arguments ───────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ *    sequence      FILE    Path to the sequence file. [required]                                                  │
+│      mode          [MODE]  Simulation mode, either per 'seconds' or 'turns'. [default: seconds]                   │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --install-completion          Install completion for the current shell.                                           │
+│ --show-completion             Show completion for the current shell, to copy it or customize the installation.    │
+│ --help                        Show this message and exit.                                                         │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ IBS growth rates computing ──────────────────────────────────────────────────────────────────────────────────────╮
+│ *  --formalism                          [b&m|bjorken-mtingwa|nagaitsev]  IBS formalism to use for growth rates.   │
+│                                                                          [default: None]                          │
+│                                                                          [required]                               │
+│ *  --rf-voltage                         FLOAT RANGE [x>=0.0]             RF voltage in [V]. [default: None]       │
+│                                                                          [required]                               │
+│ *  --harmonic-number                    INTEGER RANGE [x>=1]             Harmonic number of the ring.             │
+│                                                                          [default: None]                          │
+│                                                                          [required]                               │
+│ *  --bunch-intensity                    FLOAT RANGE [x>=0.0]             Bunch intensity in [ppb] (particles per  │
+│                                                                          bunch).                                  │
+│                                                                          [default: None]                          │
+│                                                                          [required]                               │
+│ *  --nemitt-x                           FLOAT RANGE [x>=0.0]             Normalized emittance in the horizontal   │
+│                                                                          plane in [m].                            │
+│                                                                          [default: None]                          │
+│                                                                          [required]                               │
+│ *  --nemitt-y                           FLOAT RANGE [x>=0.0]             Normalized emittance in the vertical     │
+│                                                                          plane in [m].                            │
+│                                                                          [default: None]                          │
+│                                                                          [required]                               │
+│ *  --sigma-z                            FLOAT RANGE [x>=0.0]             Bunch length in [m]. [default: None]     │
+│                                                                          [required]                               │
+│    --bunched            --no-bunched                                     Whether the beam is bunched or not. If   │
+│                                                                          False, the IBS growth rates are computed │
+│                                                                          for a coasting beam.                     │
+│                                                                          [default: bunched]                       │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Global simulation parameters ────────────────────────────────────────────────────────────────────────────────────╮
+│    --nseconds              INTEGER RANGE [x>=0]  Number of seconds to simulate. If mode is not 'seconds', this is │
+│                                                  rejected.                                                        │
+│                                                  [default: None]                                                  │
+│    --nturns                INTEGER RANGE [x>=1]  Number of turns to simulate. If mode is not 'turns', this is     │
+│                                                  rejected.                                                        │
+│                                                  [default: None]                                                  │
+│    --dt                    INTEGER RANGE [x>=0]  The time step in [s] between two data points. If mode is         │
+│                                                  'seconds', this defaults to 1s. If mode is 'turns', this         │
+│                                                  defaults to the revolution time.                                 │
+│                                                  [default: None]                                                  │
+│ *  --recompute-step        INTEGER RANGE [x>=1]  Re-compute the IBS growth rates every this many seconds or       │
+│                                                  turns.                                                           │
+│                                                  [default: None]                                                  │
+│                                                  [required]                                                       │
+│    --export                FILE                  If provided, export the results to a .npz file with the given    │
+│                                                  name.                                                            │
+│                                                  [default: None]                                                  │
+╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+### Python API
 
 For finer control, using the Python API is recommended.
 The package exposes a structure to hold results and compute beam parameters' evolution, but more elements need to be set up manually.
@@ -66,8 +138,10 @@ for step in range(1, nturns):
     results.update_with_ibs_at_next_step(...)
 ```
 
-Detailed examples are provided for each mode in the `examples` directory.
-They can be run isolated with `uv`:
+## Examples
+
+Some detailed examples are provided for each mode in the [examples](./examples) directory.
+The individual scripts follow `PEP 723` and can be run isolated with `uv`:
 
 ```bash
 uv run examples/seconds.py
