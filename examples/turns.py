@@ -32,7 +32,7 @@ import xtrack as xt
 
 from evolutor import Records, energy_spread
 
-# Get a line and Twiss
+# Get LHC line and Twiss
 lhcb1_file = Path(__file__).parent / "lhcb1.json"
 line = xt.Line.from_json(lhcb1_file)
 twiss = line.twiss4d()
