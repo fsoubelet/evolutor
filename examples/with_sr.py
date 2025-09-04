@@ -26,6 +26,8 @@ to run the script and show results by seconds, the default.
 This time the Synchrotron Radiation is included in the evolution.
 """
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 import xtrack as xt
@@ -34,7 +36,8 @@ from scipy.constants import c
 from evolutor import Records, energy_spread
 
 # Get LHC line and Twiss
-line = xt.Line.from_json("lhcb1.json")
+lhcb1_file = Path(__file__).parent / "lhcb1.json"
+line = xt.Line.from_json(lhcb1_file)
 line.build_tracker()
 line.configure_radiation(model="mean")
 twiss = line.twiss(eneloss_and_damping=True)
@@ -72,6 +75,8 @@ sigma_delta = sigma_e / (beta_rel**2)
 
 # We hardcode these SR times as for the
 # LHC twiss struggles to compute them
+# TODO: use Twiss's energy loss per turn
+# and compute from there
 sr_tau_x = 56 * 3600  # 56h in [s]
 # sr_tau_x = twiss./damping_times[0]  # in [s]
 sr_tau_y = 56 * 3600  # 56h in [s]

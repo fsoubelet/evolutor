@@ -24,6 +24,8 @@ simple evolution, then visualize it. This script shows how
 to run the script and show results by seconds, the default.
 """
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 import xtrack as xt
@@ -31,7 +33,8 @@ import xtrack as xt
 from evolutor import Records, energy_spread
 
 # Get a line and Twiss
-line = xt.Line.from_json("lhcb1.json")
+lhcb1_file = Path(__file__).parent / "lhcb1.json"
+line = xt.Line.from_json(lhcb1_file)
 twiss = line.twiss4d()
 formalism = "bjorken-mtingwa"  # or "nagaitsev" (faster) if there is no Dy
 
