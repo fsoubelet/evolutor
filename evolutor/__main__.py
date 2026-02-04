@@ -105,8 +105,9 @@ def main(
     dt: int = Option(
         min=0,
         default=None,
-        help="The time step in [s] between two data points. "
-        "If mode is 'seconds', this defaults to 1s. If mode is 'turns', this defaults to the revolution time.",
+        help="The time step - in seconds - between two data points. "
+        "When not provided, if mode is 'seconds', this defaults to 1s. "
+        "If mode is 'turns', this defaults to the revolution time.",
         rich_help_panel="Global simulation parameters",
     ),
     recompute_step: int = Option(
