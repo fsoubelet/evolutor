@@ -115,6 +115,13 @@ def main(
         help="Re-compute the IBS growth rates every this many seconds or turns. ",
         rich_help_panel="Global simulation parameters",
     ),
+    show_plots: bool = Option(
+        default=True,
+        show_choices=True,
+        help="Whether to plot and show the simulation results after running. "
+        "This will show a matplotlib blocking window.",
+        rich_help_panel="Global simulation parameters",
+    ),
     export: Path = Option(
         file_okay=True,
         dir_okay=False,
@@ -162,6 +169,7 @@ def main(
             dt=dt,
             recompute_step=recompute_step,
             bunched=bunched,
+            show_plots=show_plots,
             export=export,
         )
 
@@ -194,6 +202,7 @@ def main(
             dt=dt,
             recompute_step=recompute_step,
             bunched=bunched,
+            show_plots=show_plots,
             export=export,
         )
 
