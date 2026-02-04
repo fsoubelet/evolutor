@@ -216,6 +216,7 @@ def handle_per_seconds(
     dt: int,
     recompute_step: int,
     bunched: bool = True,
+    show_plots: bool = True,
     export: str | None = None,
 ) -> None:
     """
@@ -246,9 +247,13 @@ def handle_per_seconds(
     recompute_step : int
         Re-compute the IBS growth rates every this many seconds.
     bunched : bool, optional
-        Whether the beam is bunched or not. If False, the IBS growth rates are computed for a coasting beam.
+        Whether the beam is bunched or not. If `False`, the IBS growth rates are
+        computed for a coasting beam. Defaults to `True`.
+    show_plots: bool, optional
+        Whether to show (with a blocking window) the results' plot after running
+        the simulation. The window offers plot export options. Defaults to `True`.
     export : str | None, optional
-        If provided, export the results to a .npz file with the given name.
+        If provided, export the results to a `.npz` file with the given name.
     """
     twiss = line.twiss(compute_chromatic_properties=True)  # might be overkill
     circumference = line.get_length()
@@ -313,39 +318,40 @@ def handle_per_seconds(
         results.savez(export)
 
     # Make a plot to show the user
-    fig, axs = plt.subplot_mosaic([["epsx", "epsy"], ["sigd", "bl"]], sharex=True, figsize=(10, 7))
+    if show_plots:
+        fig, axs = plt.subplot_mosaic([["epsx", "epsy"], ["sigd", "bl"]], sharex=True, figsize=(10, 7))
 
-    # Potentially divide times by 3600 to get xaxis in [h]
-    hour_in_s: int = 3600
-    times = results.times / hour_in_s if np.max(results.times) > hour_in_s else results.times
-    time_unit = "h" if np.max(results.times) > hour_in_s else "s"
-    axs["epsx"].plot(times, 1e6 * results.epsx, lw=2)
-    axs["epsy"].plot(times, 1e6 * results.epsy, lw=2)
-    axs["sigd"].plot(times, 1e3 * results.sigma_delta, lw=2)
-    axs["bl"].plot(times, 1e2 * results.bunch_length, lw=2)
+        # Potentially divide times by 3600 to get xaxis in [h]
+        hour_in_s: int = 3600
+        times = results.times / hour_in_s if np.max(results.times) > hour_in_s else results.times
+        time_unit = "h" if np.max(results.times) > hour_in_s else "s"
+        axs["epsx"].plot(times, 1e6 * results.epsx, lw=2)
+        axs["epsy"].plot(times, 1e6 * results.epsy, lw=2)
+        axs["sigd"].plot(times, 1e3 * results.sigma_delta, lw=2)
+        axs["bl"].plot(times, 1e2 * results.bunch_length, lw=2)
 
-    # Axes parameters
-    axs["epsx"].set_ylabel(r"$\varepsilon_{x}^{n}$ [$10^{-6}$m]")
-    axs["epsy"].set_ylabel(r"$\varepsilon_{y}^{n}$ [$10^{-6}$m]")
-    axs["sigd"].set_ylabel(r"$\sigma_{\delta}$ [$10^{-3}$]")
-    axs["bl"].set_ylabel(r"Bunch length [cm]")
+        # Axes parameters
+        axs["epsx"].set_ylabel(r"$\varepsilon_{x}^{n}$ [$10^{-6}$m]")
+        axs["epsy"].set_ylabel(r"$\varepsilon_{y}^{n}$ [$10^{-6}$m]")
+        axs["sigd"].set_ylabel(r"$\sigma_{\delta}$ [$10^{-3}$]")
+        axs["bl"].set_ylabel(r"Bunch length [cm]")
 
-    for axis in (axs["epsy"], axs["bl"]):
-        axis.yaxis.set_label_position("right")
-        axis.yaxis.tick_right()
+        for axis in (axs["epsy"], axs["bl"]):
+            axis.yaxis.set_label_position("right")
+            axis.yaxis.tick_right()
 
-    for axis in (axs["sigd"], axs["bl"]):
-        axis.set_xlabel(f"Duration [{time_unit}]")
+        for axis in (axs["sigd"], axs["bl"]):
+            axis.set_xlabel(f"Duration [{time_unit}]")
 
-    for axis in axs.values():
-        axis.xaxis.set_major_locator(MaxNLocator(5))
-        axis.yaxis.set_major_locator(MaxNLocator(4))
+        for axis in axs.values():
+            axis.xaxis.set_major_locator(MaxNLocator(5))
+            axis.yaxis.set_major_locator(MaxNLocator(4))
 
-    fig.align_ylabels((axs["epsx"], axs["sigd"]))
-    fig.align_ylabels((axs["epsy"], axs["bl"]))
+        fig.align_ylabels((axs["epsx"], axs["sigd"]))
+        fig.align_ylabels((axs["epsy"], axs["bl"]))
 
-    plt.tight_layout()
-    plt.show()
+        plt.tight_layout()
+        plt.show()
 
 
 def handle_per_turns(
@@ -361,6 +367,7 @@ def handle_per_turns(
     dt: int,
     recompute_step: int,
     bunched: bool = True,
+    show_plots: bool = True,
     export: str | None = None,
 ) -> None:
     """
@@ -391,9 +398,13 @@ def handle_per_turns(
     recompute_step : int
         Re-compute the IBS growth rates every this many turns.
     bunched : bool, optional
-        Whether the beam is bunched or not. If False, the IBS growth rates are computed for a coasting beam.
+        Whether the beam is bunched or not. If `False`, the IBS growth rates are
+        computed for a coasting beam. Defaults to `True`.
+    show_plots: bool, optional
+        Whether to show (with a blocking window) the results' plot after running
+        the simulation. The window offers plot export options. Defaults to `True`.
     export : str | None, optional
-        If provided, export the results to a .npz file with the given name.
+        If provided, export the results to a `.npz` file with the given name.
     """
     twiss = line.twiss(compute_chromatic_properties=True)  # might be overkill
     circumference = line.get_length()
@@ -458,34 +469,35 @@ def handle_per_turns(
         results.savez(export)
 
     # Make a plot to show the user
-    fig, axs = plt.subplot_mosaic([["epsx", "epsy"], ["sigd", "bl"]], sharex=True, figsize=(10, 7))
+    if show_plots:
+        fig, axs = plt.subplot_mosaic([["epsx", "epsy"], ["sigd", "bl"]], sharex=True, figsize=(10, 7))
 
-    axs["epsx"].plot(turns, 1e6 * results.epsx, lw=2)
-    axs["epsy"].plot(turns, 1e6 * results.epsy, lw=2)
-    axs["sigd"].plot(turns, 1e3 * results.sigma_delta, lw=2)
-    axs["bl"].plot(turns, 1e2 * results.bunch_length, lw=2)
+        axs["epsx"].plot(turns, 1e6 * results.epsx, lw=2)
+        axs["epsy"].plot(turns, 1e6 * results.epsy, lw=2)
+        axs["sigd"].plot(turns, 1e3 * results.sigma_delta, lw=2)
+        axs["bl"].plot(turns, 1e2 * results.bunch_length, lw=2)
 
-    # Axes parameters
-    axs["epsx"].set_ylabel(r"$\varepsilon_{x}^{n}$ [$10^{-6}$m]")
-    axs["epsy"].set_ylabel(r"$\varepsilon_{y}^{n}$ [$10^{-6}$m]")
-    axs["sigd"].set_ylabel(r"$\sigma_{\delta}$ [$10^{-3}$]")
-    axs["bl"].set_ylabel(r"Bunch length [cm]")
+        # Axes parameters
+        axs["epsx"].set_ylabel(r"$\varepsilon_{x}^{n}$ [$10^{-6}$m]")
+        axs["epsy"].set_ylabel(r"$\varepsilon_{y}^{n}$ [$10^{-6}$m]")
+        axs["sigd"].set_ylabel(r"$\sigma_{\delta}$ [$10^{-3}$]")
+        axs["bl"].set_ylabel(r"Bunch length [cm]")
 
-    for axis in (axs["epsy"], axs["bl"]):
-        axis.yaxis.set_label_position("right")
-        axis.yaxis.tick_right()
+        for axis in (axs["epsy"], axs["bl"]):
+            axis.yaxis.set_label_position("right")
+            axis.yaxis.tick_right()
 
-    for axis in (axs["sigd"], axs["bl"]):
-        axis.set_xlabel("Turn Number")
+        for axis in (axs["sigd"], axs["bl"]):
+            axis.set_xlabel("Turn Number")
 
-    for axis in axs.values():
-        axis.yaxis.set_major_locator(MaxNLocator(3))
+        for axis in axs.values():
+            axis.yaxis.set_major_locator(MaxNLocator(3))
 
-    fig.align_ylabels((axs["epsx"], axs["sigd"]))
-    fig.align_ylabels((axs["epsy"], axs["bl"]))
+        fig.align_ylabels((axs["epsx"], axs["sigd"]))
+        fig.align_ylabels((axs["epsy"], axs["bl"]))
 
-    plt.tight_layout()
-    plt.show()
+        plt.tight_layout()
+        plt.show()
 
 
 # ----- Entrypoint ----- #
