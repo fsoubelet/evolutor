@@ -48,8 +48,9 @@ Usage: python -m evolutor [OPTIONS] SEQUENCE [MODE]
 
 Command line tool to run the IBS evolutor.
 
-Provided with a sequence file and required parameters, this tool runs the IBS evolutor simulation either per
-seconds or per turns, depending on the mode specified. The results can be exported to a .npz file if requested.
+Provided with a sequence file and required parameters, this tool runs the
+IBS evolutor simulation either per seconds or per turns, depending on the
+mode specified. The results can be exported to a .npz file if requested.
 
 ╭─ Arguments ───────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ *    sequence      FILE    Path to the sequence file. [required]                                                  │
@@ -62,50 +63,42 @@ seconds or per turns, depending on the mode specified. The results can be export
 ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ IBS growth rates computing ──────────────────────────────────────────────────────────────────────────────────────╮
 │ *  --formalism                          [b&m|bjorken-mtingwa|nagaitsev]  IBS formalism to use for growth rates.   │
-│                                                                          [default: None]                          │
 │                                                                          [required]                               │
-│ *  --rf-voltage                         FLOAT RANGE [x>=0.0]             RF voltage in [V]. [default: None]       │
-│                                                                          [required]                               │
-│ *  --harmonic-number                    INTEGER RANGE [x>=1]             Harmonic number of the ring.             │
-│                                                                          [default: None]                          │
-│                                                                          [required]                               │
-│ *  --bunch-intensity                    FLOAT RANGE [x>=0.0]             Bunch intensity in [ppb] (particles per  │
+│ *  --rf-voltage                         FLOAT RANGE [x>=0.0]             RF voltage in [V]. [required]            │
+│ *  --harmonic-number                    INTEGER RANGE [x>=1]             Harmonic number of the ring. [required]  │
+│ *  --bunch-intensity                    FLOAT RANGE [x>=0.0]             Bunch intensity in  (particles per       │
 │                                                                          bunch).                                  │
-│                                                                          [default: None]                          │
 │                                                                          [required]                               │
 │ *  --nemitt-x                           FLOAT RANGE [x>=0.0]             Normalized emittance in the horizontal   │
-│                                                                          plane in [m].                            │
-│                                                                          [default: None]                          │
+│                                                                          plane in .                               │
 │                                                                          [required]                               │
 │ *  --nemitt-y                           FLOAT RANGE [x>=0.0]             Normalized emittance in the vertical     │
-│                                                                          plane in [m].                            │
-│                                                                          [default: None]                          │
+│                                                                          plane in .                               │
 │                                                                          [required]                               │
-│ *  --sigma-z                            FLOAT RANGE [x>=0.0]             Bunch length in [m]. [default: None]     │
-│                                                                          [required]                               │
+│ *  --sigma-z                            FLOAT RANGE [x>=0.0]             Bunch length in . [required]             │
 │    --bunched            --no-bunched                                     Whether the beam is bunched or not. If   │
 │                                                                          False, the IBS growth rates are computed │
 │                                                                          for a coasting beam.                     │
 │                                                                          [default: bunched]                       │
 ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Global simulation parameters ────────────────────────────────────────────────────────────────────────────────────╮
-│    --nseconds              INTEGER RANGE [x>=0]  Number of seconds to simulate. If mode is not 'seconds', this is │
-│                                                  rejected.                                                        │
-│                                                  [default: None]                                                  │
-│    --nturns                INTEGER RANGE [x>=1]  Number of turns to simulate. If mode is not 'turns', this is     │
-│                                                  rejected.                                                        │
-│                                                  [default: None]                                                  │
-│    --dt                    INTEGER RANGE [x>=0]  The time step in [s] between two data points. If mode is         │
-│                                                  'seconds', this defaults to 1s. If mode is 'turns', this         │
-│                                                  defaults to the revolution time.                                 │
-│                                                  [default: None]                                                  │
-│ *  --recompute-step        INTEGER RANGE [x>=1]  Re-compute the IBS growth rates every this many seconds or       │
-│                                                  turns.                                                           │
-│                                                  [default: None]                                                  │
-│                                                  [required]                                                       │
-│    --export                FILE                  If provided, export the results to a .npz file with the given    │
-│                                                  name.                                                            │
-│                                                  [default: None]                                                  │
+│    --nseconds                             INTEGER RANGE [x>=0]  Number of seconds to simulate. If mode is not     │
+│                                                                 'seconds', this is rejected.                      │
+│    --nturns                               INTEGER RANGE [x>=1]  Number of turns to simulate. If mode is not       │
+│                                                                 'turns', this is rejected.                        │
+│    --dt                                   INTEGER RANGE [x>=0]  The time step - in seconds - between two data     │
+│                                                                 points. When not provided, if mode is 'seconds',  │
+│                                                                 this defaults to 1s. If mode is 'turns', this     │
+│                                                                 defaults to the revolution time.                  │
+│ *  --recompute-step                       INTEGER RANGE [x>=1]  Re-compute the IBS growth rates every this many   │
+│                                                                 seconds or turns.                                 │
+│                                                                 [required]                                        │
+│    --show-plots        --no-show-plots                          Whether to plot and show the simulation results   │
+│                                                                 after running. This will show a matplotlib        │
+│                                                                 blocking window.                                  │
+│                                                                 [default: show-plots]                             │
+│    --export                               FILE                  If provided, export the results to a .npz file    │
+│                                                                 with the given name.                              │
 ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
